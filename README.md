@@ -1,8 +1,8 @@
-# Medical Abstraction and Reasoning Corpus (MedARC)
+# Medical Abstraction and Reasoning Corpus (MedARC-QA)
 
 [**📖 Paper**](https://arxiv.org/abs/2406.01574) |
 
-This repo contains the evaluation code for the paper "[EVALUATION OF LARGE LANGUAGE MODEL ABSTRACTION AND REASONING IN LONG-TAIL MEDICAL TASKS]()"
+This repo contains the evaluation code for the paper "[EVALUATION OF LARGE LANGUAGE MODEL ABSTRACTION AND REASONING IN LONG-TAIL AND OPEN-ENDED MEDICAL TASKS]()"
 
 ## Introduction
 We introduce MedARC, a question and answer (QA) benchmark designed to evaluate LLMs in long-tail or out-of-distribution medical tasks that are outside their training data corpora. Our results show that a LLMs show poor performance on MedARC contrasting with findings on conventional medical QA (e.g. USMLE), indicating that MMLU-Pro includes more complex reasoning questions. 
