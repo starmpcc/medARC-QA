@@ -35,7 +35,7 @@ sh eval_gpt_4o.sh
 | Llama-3.1-8B                   | 23.00           |
 | Mistral-7Bv0.3                 | 22.00           |
 | gpt-4o-mini                    | 15.00           |
-| medalpaca-13b                  |  8.05           |
+| medalpaca-13b                  |  8.00           |
 
 For more details on various models and their accuracy across different subjects, please visit our [**Leaderboard**]().
 
