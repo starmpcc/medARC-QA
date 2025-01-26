@@ -5,9 +5,6 @@ Script Name: evaluate_from_api.py
 Description: assess llms
 License: [Type of license, e.g., "MIT License" or "GPLv3"]
 
-V0 - 20241013. Pilot data with 25 questions
-V1 - 20241013. Updated Mistral to v3.... as v1 not supported anymore on huggingface
-
 """
 
 # Import libraries
@@ -54,13 +51,11 @@ def get_client(args):
             api_key=LAMBDA_API_KEY,
             base_url="https://api.lambdalabs.com/v1",
         )
-    elif args.model_name in ["deepseek-chat", "deepseek-coder"]:
-        client = OpenAI(api_key=OPENAI_API_KEY, base_url="https://api.deepseek.com/")
     elif args.model_name in ["Llama-3.1-8B-Instruct", "Llama-3.1-70B-Instruct", "Llama-3.3-8B-Instruct", "Llama-3.3-70B-Instruct"]:
         client = InferenceClient(model="meta-llama/" + args.model_name, token=HF_API_KEY)
     elif args.model_name in ["Mistral-7B-Instruct-v0.3"]:
         client = InferenceClient(model="mistralai/" + args.model_name, token=HF_API_KEY)
-    elif args.model_name in ["medalpaca-13b", "Meditron3-8B"]:
+    elif args.model_name in ["medalpaca-13b", "Meditron3-8B", "Meditron3-70B"]:
         client = InferenceClient(token=HF_API_KEY)
     elif args.model_name in ["gemini-1.5-flash-latest", "gemini-1.5-pro-latest", "gemini-1.5-flash-8b"]:
         genai.configure(api_key=GOOGLE_API_KEY)
@@ -115,7 +110,7 @@ def query(api_url, payload):
 
 def call_api(client, instruction, inputs):
     start = time.time()
-    if args.model_name in ["gpt-4", "gpt-4o", "gpt-4o-mini", "deepseek-chat", "deepseek-coder",  "llama3.1-405b-instruct-fp8"]:
+    if args.model_name in ["gpt-4", "gpt-4o", "gpt-4o-mini", "llama3.1-405b-instruct-fp8"]:
         message_text = [{"role": "user", "content": instruction + inputs}]
         completion = client.chat.completions.create(
           model=args.model_name,
@@ -163,7 +158,7 @@ def call_api(client, instruction, inputs):
             max_tokens=8000
         )
         result = completion.choices[0].message.content
-    elif args.model_name in ["medalpaca-13b", "Meditron3-8B"]:
+    elif args.model_name in ["medalpaca-13b", "Meditron3-8B", "Meditron3-70B",]:
         message_text = [{"role": "user", "content": instruction + inputs}]
 
         if 0:
@@ -173,15 +168,15 @@ def call_api(client, instruction, inputs):
             #     # model="TheBloke/medalpaca-13B-GGML",
             #     model="https://po55oh5wzv7ibwc2.us-east-1.aws.endpoints.huggingface.cloud",
             #     messages=message_text,
-            #     max_tokens=4000
+            #     max_tokens=8000
             # )
             completion = client.chat_completion(
                 messages=message_text,
-                model="https://po55oh5wzv7ibwc2.us-east-1.aws.endpoints.huggingface.cloud",
+                model=HUGGINGFACE_API_URL,
             )
         elif args.model_name == "medalpaca-13b":
             completion = query(
-                api_url="https://h2se8j5148st89lg.us-east-1.aws.endpoints.huggingface.cloud",
+                api_url=HF_INFERENCE_ENDPOINT,
                 payload={
                 "inputs": inputs,
                 "parameters": {
@@ -190,9 +185,9 @@ def call_api(client, instruction, inputs):
             })
             print(completion)
             result = completion[0]['generated_text']
-        elif args.model_name == "Meditron3-8B":
+        elif args.model_name == "Meditron3-8B" or args.model_name == "Meditron3-70B":
             completion = query(
-                api_url="https://iayniw1eqjag3bcq.us-east-1.aws.endpoints.huggingface.cloud",
+                api_url=HF_INFERENCE_ENDPOINT,
                 payload={
                 "inputs": inputs,
                 "parameters": {
@@ -311,7 +306,6 @@ def extract_answer(text):
         r" [\(\[]([A-J])[\)\]]",                                  # "best course... is (D)" or "[D]"
         r"best course of action.*[\(\[]([A-J])[\)\]]",            # "best course of action... (D)" or "[D]" in any sentence
         r"(?=.*\bbest\b)(?=.*\baction\b).*[\(\[]([A-J])[\)\]]",   # Sentence with "best" and "action" followed by (D) or [D]
-        r"\b([A-J])\b(?!.*\b[A-J]\b)"                             # Last standalone A-J in text, with capturing group
     ]
     
     # Try each pattern sequentially
@@ -445,10 +439,6 @@ def evaluate(subjects, model_name, output_dir, args):
 
         for idx, each in enumerate(tqdm(test_data)):
 
-            # FOR RESUMING FROM INCOMPLETE RUNS
-            # if model_name == 'Meditron3-8B':
-            #     if idx<71:
-            #         continue
             label = each["answer"]
             category = subject
             pred, response, exist = single_request(client, each, dev_df, res)
@@ -512,8 +502,7 @@ if __name__ == "__main__":
                                  "Llama-3.3-8B-Instruct", "Llama-3.3-70B-Instruct", "llama3.1-405b-instruct-fp8",
                                  "Mistral-7B-Instruct-v0.3",
                                  "medalpaca-13b",
-                                 "Meditron3-8B",
-                                 "deepseek-chat", "deepseek-coder",
+                                 "Meditron3-8B", "Meditron3-70B",
                                  "gemini-1.5-flash-latest",
                                  "gemini-1.5-pro-latest",
                                  "claude-3-opus-20240229",
