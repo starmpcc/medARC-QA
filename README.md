@@ -25,7 +25,8 @@ sh eval_uq_gpt_4o.sh
 ```
 
 ## Results
-Jupyter notebooks, Results_v1(20250126).ipynb and Results_UQ_v1(20250126).ipynb, reproduce Figure 2 and Figure 6 from the manuscript.
+Jupyter notebooks, Results_v1(20250126).ipynb and Results_UQ_v1(20250126).ipynb, reproduce Figure 2 and Figure 6 from the manuscript. 
+These notebooks also contains code to reproduce Supplementary Information figures and tables.
 
 ## 🏆 Leaderboard (Model Cut-off Date 12/19/2024)
 | Model                          | Overall Accuracy |
