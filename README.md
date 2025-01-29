@@ -35,7 +35,9 @@ This is a reminder that in a patient without a usable arm, you must find another
 
 ---
 
-### Commentary *o1's response reveals a failure in fundamental medical commonsense reasoning. Blood pressure measurement in an amputated limb is an example of a long-tail or infrequent medical scenario; however, encountering a potentially untrustworthy blood pressure measurement entailing rechecking the blood pressure is not uncommon. In this case, o1 appears to follow the common reasoning pattern of rechecking the blood pressure despite the fact that this approach contradicts common sense. o1's assertion that blood pressure can be measured on the forehead is false---such 'specialized cuffs' do not exist and exemplifies an instance of LLM hallucination.*
+### Commentary 
+
+*o1's response reveals a failure in fundamental medical commonsense reasoning. Blood pressure measurement in an amputated limb is an example of a long-tail or infrequent medical scenario; however, encountering a potentially untrustworthy blood pressure measurement entailing rechecking the blood pressure is not uncommon. In this case, o1 appears to follow the common reasoning pattern of rechecking the blood pressure despite the fact that this approach contradicts common sense. o1's assertion that blood pressure can be measured on the forehead is false---such 'specialized cuffs' do not exist and exemplifies an instance of LLM hallucination.*
 
 ## Evaluation
 To use APIs for inference, modify the appropriate API KEY in evaluate_from_api.py script and execute the corresponding bash script:
