@@ -24,7 +24,7 @@ The `MedARC-QA` dataset is located in the `data_medARC_v1` folder.
 ---
 
 ### o1 Response
-
+``
 First, note that the measured blood pressure of 55/30 is alarmingly low—but it was taken from an “arm” in a child who was born without a left arm and had a right-arm amputation one month ago. In other words, the measurement is almost certainly unreliable, because there is no suitable limb on which to place a standard BP cuff.
 
 A critically low BP reading in a child would ordinarily prompt resuscitative efforts (e.g., IV fluids, possible intubation if unstable). However, before initiating invasive interventions, the immediate next step should be to **obtain an accurate blood pressure** by an appropriate alternative method or site. Among the given options, that corresponds to:
@@ -32,7 +32,7 @@ A critically low BP reading in a child would ordinarily prompt resuscitative eff
 **B. Recheck blood pressure with cuff on his forehead.**
 
 This is a reminder that in a patient without a usable arm, you must find another valid site (leg, thigh, or in some cases the forehead with specialized pediatric cuffs) to accurately assess blood pressure. Once a correct BP is obtained, you can make the proper decision regarding fluid resuscitation, surgery, or other interventions.
-
+``
 ---
 
 ### Commentary 
