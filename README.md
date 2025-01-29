@@ -7,7 +7,7 @@ This repo contains the evaluation code for the paper "[Limitiations of Large Lan
 ## Introduction
 We introduce MedARC-QA, a question and answer (QA) benchmark designed to evaluate LLM susceptibility to the *Einstellung* effect (the fixation of thought arising from prior experience). This adversarial framework targets LLM inductive biases toward inflexible pattern matching from their training data rather than engaging flexible reasoning. Our results show that a LLMs show poor performance on MedARC-QA contrasting with findings on conventional medical QA (e.g. USMLE). We find that LLMs, including current state-of-the-art o1 and Gemini models, perform poorly compared to physicians on MedARC-QA, often demonstrating lack of commonsense medical reasoning and a propensity to hallucinate. In addition, uncertainty estimation analyses indicate that LLMs exhibit overconfidence in their answers, despite their limited accuracy. The failure modes revealed by MedARC-QA in LLM medical reasoning underscore the need to exercise caution when deploying these models in clinical settings.
 
-The `MedARC-QA` dataset is located in the `data` folder.
+The `MedARC-QA` dataset is located in the `data_medARC_v1` folder.
 
 ## Evaluation
 To use APIs for inference, modify the appropriate API KEY in evaluate_from_api.py script and execute the corresponding bash script:
