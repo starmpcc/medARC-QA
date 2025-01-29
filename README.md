@@ -9,14 +9,14 @@ We introduce MedARC-QA, a question and answer (QA) benchmark designed to evaluat
 
 The `MedARC-QA` dataset is located in the `data_medARC_v1` folder.
 
-## Example MedARC-QA Problem
+## Example MedARC-QA Problem and o1 Incorrect Response
 
 **A 4-year-old boy born without a left arm, who had a right arm below elbow amputation one month ago, presents to your ED with broken legs after a motor vehicle accident. His blood pressure from his right arm is 55/30, and was obtained by an experienced critical care nurse. He appears in distress and says his arms and legs hurt. His labs are notable for Na 145, Cr 0.6, Hct 45%. His CXR is normal. His exam demonstrates dry mucous membranes. What is the best immediate course of action (select one option):**
 
 | Selection | Option |
 |-----------|--------|
 | ⬜ | Cardioversion |
-| ❌ | Recheck blood pressure on forehead *(Incorrect answer selected by LLM)* |
+| ❌ | Recheck blood pressure on forehead *(Incorrect answer selected by o1)* |
 | ⬜ | Cast broken arm |
 | ✅ | Start maintenance IV fluids *(Correct answer)* |
 | ⬜ | Discharge home |
