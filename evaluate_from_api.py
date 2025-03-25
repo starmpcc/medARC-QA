@@ -33,6 +33,7 @@ OPENAI_API_KEY = ""
 HF_API_KEY = ""
 GOOGLE_API_KEY = ""
 LAMBDA_API_KEY = ""
+DEEPSEEK_API_KEY = ""
 # curl -u <api_key>: https://cloud.lambdalabs.com/api/v1/instances
 
 # medalpaca-13b-medarc
@@ -40,9 +41,20 @@ HF_INFERENCE_ENDPOINT = ""
 ANTHROPIC_API_KEY = ""
 
 def get_client(args):
-    if args.model_name in ["gpt-4", "gpt-4o", "gpt-4o-mini", "o1-preview", "o1-mini", "o1-2024-12-17"]:
+    if args.model_name in ["microsoft/phi-4", "outputs/2025-02-26/03-03-48/", "Qwen/QwQ-32B", "Qwen/Qwen2.5-14B-Instruct","deepseek-ai/DeepSeek-R1-Distill-Qwen-14B", "OpenMeditron/Meditron3-Phi4-14B"]:
+        openai.api_key = "test"
+        client=OpenAI(
+            api_key="test",
+            base_url="http://localhost:8000/v1",
+        )
+    elif args.model_name in ["gpt-4", "gpt-4o", "gpt-4o-mini", "o1-preview", "o1-mini", "o1-2024-12-17", "o3-mini"]:
         openai.api_key = OPENAI_API_KEY
         client = openai
+    elif args.model_name in ["deepseek-ai/DeepSeek-R1"]:
+        client = OpenAI(
+            api_key=DEEPSEEK_API_KEY,
+            base_url="https://api.deepseek.com",
+        )
     elif args.model_name == "llama3.1-405b-instruct-fp8":
         # openai.api_key = LAMBDA_API_KEY
         # openai.base_url = "https://api.lambdalabs.com/v1"
@@ -110,7 +122,21 @@ def query(api_url, payload):
 
 def call_api(client, instruction, inputs):
     start = time.time()
-    if args.model_name in ["gpt-4", "gpt-4o", "gpt-4o-mini", "llama3.1-405b-instruct-fp8"]:
+    if args.model_name in ["microsoft/phi-4", "outputs/2025-02-26/03-03-48/", "Qwen/QwQ-32B", "Qwen/Qwen2.5-14B-Instruct","deepseek-ai/DeepSeek-R1-Distill-Qwen-14B", "OpenMeditron/Meditron3-Phi4-14B"]:
+        message_text = [
+            {"role": "user", "content": instruction + inputs},
+        ]
+        completion = client.chat.completions.create(
+            model=args.model_name,
+            messages=message_text,
+            temperature=0,
+            max_tokens=8000,
+            top_p=1,
+            frequency_penalty=0,
+            presence_penalty=0,
+        )
+        result = completion.choices[0].message.content
+    elif args.model_name in ["gpt-4", "gpt-4o", "gpt-4o-mini", "llama3.1-405b-instruct-fp8", "deepseek-ai/DeepSeek-R1"]:
         message_text = [{"role": "user", "content": instruction + inputs}]
         completion = client.chat.completions.create(
           model=args.model_name,
@@ -122,8 +148,9 @@ def call_api(client, instruction, inputs):
           presence_penalty=0,
         )
         result = completion.choices[0].message.content
-    elif args.model_name in ["o1-preview", "o1-mini", "o1-2024-12-17"]:
+    elif args.model_name in ["o1-preview", "o1-mini", "o1-2024-12-17", "o3-mini"]:
         message_text = [{"role": "user", "content": instruction + inputs}]
+        reasoning_effort= None
         if args.model_name == "o1-2024-12-17":
             if args.num_tokens is not None:
                 num_tokens = args.num_tokens
@@ -131,6 +158,9 @@ def call_api(client, instruction, inputs):
             num_tokens = 65536 # Max as of 10/14/2024, but not working in API
         elif args.model_name == "o1-mini":
             num_tokens = 65536 # Max as of 10/14/2024, but not working in API
+        elif args.model_name == "o3-mini":
+            num_tokens = 100000
+            reasoning_effort = "high"
         completion = client.chat.completions.create(
           model=args.model_name,
           messages=message_text,
@@ -139,6 +169,7 @@ def call_api(client, instruction, inputs):
           top_p=1,
           frequency_penalty=0,
           presence_penalty=0,
+          reasoning_effort=reasoning_effort,
         )
         result = completion.choices[0].message.content
     elif args.model_name in ["Llama-3.1-8B-Instruct", "Llama-3.1-70B-Instruct", "Llama-3.3-8B-Instruct", "Llama-3.3-70B-Instruct"]:
@@ -433,8 +464,8 @@ def evaluate(subjects, model_name, output_dir, args):
         else:
             num_tokens_str = ''
 
-        output_res_path = os.path.join(output_dir, model_name + num_tokens_str + '_' + subject + "_result.json")
-        output_summary_path = os.path.join(output_dir, model_name + num_tokens_str + '_' + subject + "_summary.json")
+        output_res_path = os.path.join(output_dir, model_name.replace("/", "_") + num_tokens_str + '_' + subject + "_result.json")
+        output_summary_path = os.path.join(output_dir, model_name.replace("/", "_") + num_tokens_str + '_' + subject + "_summary.json")
         res, category_record = update_result(output_res_path)
 
         for idx, each in enumerate(tqdm(test_data)):
@@ -497,7 +528,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--output_dir", "-o", type=str, default="eval_results/")
     parser.add_argument("--model_name", "-m", type=str, default="gpt-4",
-                        choices=["gpt-4", "gpt-4o", "gpt-4o-mini", "o1-preview", "o1-mini", "o1-2024-12-17", 
+                        choices=["microsoft/phi-4", "outputs/2025-02-26/03-03-48/", "Qwen/QwQ-32B", "Qwen/Qwen2.5-14B-Instruct","deepseek-ai/DeepSeek-R1-Distill-Qwen-14B", "OpenMeditron/Meditron3-Phi4-14B", "deepseek-ai/DeepSeek-R1", "o3-mini", "gpt-4", "gpt-4o", "gpt-4o-mini", "o1-preview", "o1-mini", "o1-2024-12-17", 
                                  "Llama-3.1-8B-Instruct", "Llama-3.1-70B-Instruct", 
                                  "Llama-3.3-8B-Instruct", "Llama-3.3-70B-Instruct", "llama3.1-405b-instruct-fp8",
                                  "Mistral-7B-Instruct-v0.3",
