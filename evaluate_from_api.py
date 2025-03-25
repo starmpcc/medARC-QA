@@ -138,8 +138,9 @@ def call_api(client, instruction, inputs):
         result = completion.choices[0].message.content
     elif args.model_name in ["gpt-4", "gpt-4o", "gpt-4o-mini", "llama3.1-405b-instruct-fp8", "deepseek-ai/DeepSeek-R1"]:
         message_text = [{"role": "user", "content": instruction + inputs}]
+        model_name = 'deepseek-reasoner' if args.model_name == "deepseek-ai/DeepSeek-R1" else args.model_name
         completion = client.chat.completions.create(
-          model=args.model_name,
+          model=model_name,
           messages=message_text,
           temperature=0,
           max_tokens=8000,
